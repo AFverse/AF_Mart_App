@@ -10,3 +10,7 @@ class UserAdmin(admin.ModelAdmin):
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone', 'otp', 'validity', 'verified']
+
+@register(Token)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['token', 'user', 'created_at']

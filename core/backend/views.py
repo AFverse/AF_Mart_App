@@ -7,8 +7,9 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import User, OTP 
 from django.contrib.auth.hashers import make_password
-from .utils import send_otp
+from .utils import *
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
 
 @api_view(['POST'])
 def request_otp(request):
@@ -59,18 +60,19 @@ def create_account(request):
 def login_user(request):
     phone = request.data.get('phone')
     password = request.data.get('password')
-
-    if not phone or not password:
-        return Response({'error': 'Phone number and password are required'}, status=status.HTTP_BAD_REQUEST)
-
-    # user = authenticate(request, phone=phone, password=password)
-    try:
-            user = User.objects.get(phone=phone)
-    except User.DoesNotExist:
-            return Response("user does not exist")
-
-    if user is not None and user.check_password(password):
-        login(request, user)
-        return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+    email = request.data.get('email')
+    
+    if email:
+        user = get_object_or_404(User, email = email)
+        
+    elif phone:
+        user = get_object_or_404(User, phone = phone)
     else:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_UNAUTHORIZED)
+        return Response("data_missing", 400)
+    
+    if check_password(password, user.password):
+        return token_response(user)
+    else:
+        return Response("incorrect_password", 400)
+
+    
