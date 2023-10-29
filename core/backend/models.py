@@ -27,3 +27,13 @@ class Token(models.Model):
     def __str__(self) -> str:
         return self.user.phone
     
+    
+class PassResetToken(models.Model):
+    token = models.CharField(max_length=5000) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pass_reset_tokens_set')
+    validity = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return self.user.phone
+    

@@ -76,3 +76,17 @@ def login_user(request):
         return Response("incorrect_password", 400)
 
     
+
+@api_view(['POST'])
+def pass_reset_email(request):
+    phone  = request.data.get('phone')
+    email  = request.data.get('email')
+    
+    if phone:
+        user = get_object_or_404(User, phone = phone)
+        return send_pass_reset_email(user)
+    elif email:
+        user = get_object_or_404(User, email = email)
+        return send_pass_reset_email(user)
+    else:
+        return Response("data missing!", 400)

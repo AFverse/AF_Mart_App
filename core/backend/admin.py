@@ -14,3 +14,7 @@ class UserAdmin(admin.ModelAdmin):
 @register(Token)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['token', 'user', 'created_at']
+    
+@register(PassResetToken)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['token', 'user', 'validity', 'created_at']

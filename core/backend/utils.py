@@ -1,8 +1,11 @@
+from django.core.mail import EmailMessage
 import uuid
+from core.settings import TEMPLATES_BASE_URL
 from rest_framework.response import Response
 from .models import *
 import random 
 import datetime
+from django.template.loader import render_to_string
 
 
 def send_otp(phone):
@@ -24,4 +27,26 @@ def token_response(user):
     Token.objects.create(token = token, user = user)
     return Response(f"token {token}")
 
+    
+def send_pass_reset_email(user):
+    token = new_token()
+    exp_time = datetime.datetime.now() - datetime.timedelta(minutes=10)
+    PassResetToken.objects.update_or_create(user = user, defaults={'user':user, 'token':token, 'validity':exp_time})
+    
+    email_data = {
+        'token':token,
+        'email':user.email, 
+        'base_url':TEMPLATES_BASE_URL,
+    }
+    
+    message = render_to_string('emails/reset_pass.html',  email_data)
+    msg = EmailMessage('Reset Password', body=message, to=[user.email])
+    msg.content_subtype = 'html'
+    
+    try:
+        msg.send()
+    except:
+        pass  
+    return Response("email_send_successfully")
+    
     
