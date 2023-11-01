@@ -30,7 +30,7 @@ def token_response(user):
     
 def send_pass_reset_email(user):
     token = new_token()
-    exp_time = datetime.datetime.now() - datetime.timedelta(minutes=10)
+    exp_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
     PassResetToken.objects.update_or_create(user = user, defaults={'user':user, 'token':token, 'validity':exp_time})
     
     email_data = {

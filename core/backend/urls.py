@@ -7,4 +7,7 @@ urlpatterns = [
     path('create_account/', views.create_account, name='create_account'),
     path('login/', views.login_user, name='login_user'),
     path('reset_pass_request/', views.pass_reset_email, name='pass_reset_email'),
+    path('reset_pass_form/<email>/<token>/', views.reset_pass_form, name='reset_pass_form'),
+    path('reset_pass_confirm/', views.reset_pass_confirm, name='reset_pass_confirm'),
+    
 ]

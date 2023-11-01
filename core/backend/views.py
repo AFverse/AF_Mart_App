@@ -90,3 +90,28 @@ def pass_reset_email(request):
         return send_pass_reset_email(user)
     else:
         return Response("data missing!", 400)
+    
+    
+@api_view(['GET'])
+def reset_pass_form(request, email, token):
+    token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
+    
+    if token_instance:
+        if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
+            context = {
+                'email':email,
+                'token':token
+            }
+            return render(request, 'accounts/new-pass-form.html', context)
+        else:
+            token_instance.delete()
+            return render(request, 'accounts/link-expired.html')
+    else:
+        return HttpResponse("Instance not found")
+    
+@api_view(['GET'])
+def reset_pass_form(request, email, token):
+    
+    
+    
+    
