@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import *
 import random 
 import datetime
+from rest_framework.permissions import BasePermission
 from django.template.loader import render_to_string
 
 
@@ -49,4 +50,8 @@ def send_pass_reset_email(user):
         pass  
     return Response("email_send_successfully")
     
+class IsAuthenticatedUser(BasePermission):
+    message = 'unauthenticated_user'
     
+    def has_permission(self, request, view):
+        return bool(request.user)

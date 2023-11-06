@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import User, OTP 
@@ -11,6 +11,7 @@ from .utils import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
+
 
 
 @api_view(['GET'])
@@ -148,7 +149,9 @@ def reset_pass_confirm(request):
         messages.error(request, 'Linked Expired')
         return redirect('alert')
     
-    print(password1)
-    return HttpResponse("Updated")
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedUser])
+def userdata(request):
+    return Response()
     
     
