@@ -19,14 +19,17 @@
               {% endif %}
 
               <h3>Update Password</h3>
-              <form {% url '' %}>
+              <form action="{% url 'reset_pass_confirm' %}" method="post">
+                {% csrf_token %}
                 
                 <div class="mb-3">
-                  <input type="password" class="form-control" placeholder="New Passowrd">
+                  <input type="password" name="password1" class="form-control" placeholder="New Passowrd">
                 </div>
                 <div class="mb-3">
-                  <input type="password" class="form-control" placeholder="Confirm Password">
+                  <input type="password" name="password2" class="form-control" placeholder="Confirm Password">
                 </div>
+                <input type="hidden" name="email" value="{{email}}">
+                <input type="hidden" name="token" value="{{token}}">
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
 

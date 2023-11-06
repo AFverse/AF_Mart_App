@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,6 +10,12 @@ from django.contrib.auth.hashers import make_password
 from .utils import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
+from django.contrib import messages
+
+
+@api_view(['GET'])
+def alert(request):
+    return render(request, 'alert.html')
 
 @api_view(['POST'])
 def request_otp(request):
@@ -100,18 +106,49 @@ def reset_pass_form(request, email, token):
         if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
             context = {
                 'email':email,
-                'token':token
+                'token':token,
+                # 'base_url':TEMPLATES_BASE_URL,
             }
             return render(request, 'accounts/new-pass-form.html', context)
         else:
             token_instance.delete()
-            return render(request, 'accounts/link-expired.html')
+            messages.error(request, 'Linked Expired')
+            return redirect('alert')
     else:
-        return HttpResponse("Instance not found")
+        messages.info(request, "Instance Not found!")
+        return redirect('alert')
     
-@api_view(['GET'])
-def reset_pass_form(request, email, token):
+@api_view(['POST'])
+def reset_pass_confirm(request):
+    password1 = request.data.get('password1')
+    password2 = request.data.get('password2')
+    email = request.data.get('email')
+    token = request.data.get('token')
+    token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
     
+    if token_instance:
+        if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
+            if password1 == password2:
+                user = token_instance.user 
+                user.password = make_password(password1)
+                user.save()
+                token_instance.delete()
+                Token.objects.filter(user = user).delete()
+                messages.success(request, "Password Updated successfully!")
+                return redirect('alert')
+            else:
+                context = {
+                'email':email,
+                'token':token,
+                'error': "Passowrd and confirm password must be same!",
+                }
+            return render(request, 'accounts/new-pass-form.html', context)
     
+    else:
+        messages.error(request, 'Linked Expired')
+        return redirect('alert')
+    
+    print(password1)
+    return HttpResponse("Updated")
     
     
