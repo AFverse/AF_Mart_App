@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+2n$&!tneuqxfkt#-%&5_$4el2m@=vz7ih!ggmmlwcf2srl*ue
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -153,8 +153,9 @@ EMAIL_HOST_PASSWORD = 'lnsgbhtprmuhwcza'
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
-    "http://localhost:56785",
-]
+    "http://localhost:3000",
+    
+    ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
