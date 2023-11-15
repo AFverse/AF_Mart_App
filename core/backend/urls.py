@@ -13,7 +13,8 @@ urlpatterns = [
     path('userdata/', views.userdata, name='userdata'),
     
     
-    path('categories/', views.Categories, name='categories'),
+    path('', views.Categories, name='categories'),
+    # path('categories/', views.Categories, name='categories'),
     path('product_by_ctg/', views.ProductByCtg, name='product_by_ctg'),
     path('product_details/<id>/', views.ProductDetails, name='product_details'),
     
