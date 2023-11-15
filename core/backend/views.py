@@ -153,5 +153,15 @@ def reset_pass_confirm(request):
 @permission_classes([IsAuthenticatedUser])
 def userdata(request):
     return Response()
+
+
+def Categories(request):
+    return render(request, 'categories.html')
+
+def ProductByCtg(request):
+    return render(request, 'productsByCtg.html')
+
+def ProductDetails(request, id):
+    return render(request, 'product_details.html', {'id':id})
     
     
