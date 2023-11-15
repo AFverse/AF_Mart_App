@@ -48,7 +48,7 @@ class ParentCategory(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100)
     disc = models.TextField()
-    img = models.ImageField(upload_to='categories/images')
+    img = models.ImageField(upload_to='categories/images', null=True, blank=True)
     parent_category = models.ForeignKey(ParentCategory, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
