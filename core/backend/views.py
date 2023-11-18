@@ -155,13 +155,30 @@ def userdata(request):
     return Response()
 
 
-def Categories(request):
-    return render(request, 'categories.html')
 
-def ProductByCtg(request):
-    return render(request, 'productsByCtg.html')
+
+
+
+
+
+# views for web template....
+
+from .models import *
+
+def Categories(request):
+    pCat=ParentCategory.objects.all()
+    context={'pCat' : pCat}
+    return render(request, 'categories.html', context)
+
+
+def ProductByCtg(request, id):
+    obj = Product.objects.filter(category__id=id)
+    context={'products':obj}
+    return render(request, 'productsByCtg.html', context)
 
 def ProductDetails(request, id):
-    return render(request, 'product_details.html', {'id':id})
-    
+    obj=Product.objects.get(id=id)
+    context={'product':obj}
+    print(obj.disc)
+    return render(request, 'product_details.html', context)
     

@@ -19,35 +19,47 @@
         </div>
         <div class="row">
 
-            <div class="col-md-3 m-3  p-3 shadow border d-grid gap-2 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-                <small class="d-block pt-3">quantity</small>
-                <div class="d-inline"><ins>Rs 115</ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
-                <button class="btn btn-primary rounded">ADD TO CART</button>
+
+
+
+          <div class="container">
+            <div class="row">
+                {% for i in products %}
+                    <div class="col-md-4 m-3 p-3 shadow border d-grid gap-2">
+                        <a href="{% url 'product_details' i.id %}"><img src="/media/{{ i.picture }}" alt="" height="180" width="180"></a>
+                        <h6 class="m-2">{{ i.title }}</h6>
+                        <small class="d-block pt-3">quantity</small>
+                        <div class="d-inline">
+                            <ins>Rs {{ i.price }}</ins>
+                            {% if i.discount is not None %}
+                                <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span>
+                            {% endif %}
+                        </div>
+                        <button class="btn btn-primary rounded">ADD TO CART</button>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="col-md-3 m-3  p-3 shadow border d-grid gap-2 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-                <small class="d-block pt-3">quantity</small>
-                <div class="d-inline"><ins>Rs 115</ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
-                <button class="btn btn-primary rounded">ADD TO CART</button>
-            </div>
-            <div class="col-md-3 m-3  p-3 shadow border d-grid gap-2 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-                <small class="d-block pt-3">quantity</small>
-                <div class="d-inline"><ins>Rs 115</ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
-                <button class="btn btn-primary rounded">ADD TO CART</button>
-            </div>
-            <div class="col-md-3 m-3  p-3 shadow border d-grid gap-2 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-                <small class="d-block pt-3">quantity</small>
-                <div class="d-inline"><ins>Rs 115</ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
-                <button class="btn btn-primary rounded">ADD TO CART</button>
-            </div>
+        </div>
         
+
+
+{% comment %}            
+            {% for i in products %}
+
+            <div class="col-md-3 m-3  p-3 shadow border d-grid gap-2 ">
+               <a href="{%  url 'product_details'  i.id %}">  <img src="/media/{{i.picture}}" alt="" height="180" width="180">    </a>
+                <h6 class="m-2">{{i.title}}</h6>
+                <small class="d-block pt-3">quantity</small>
+                <div class="d-inline"><ins>Rs {{i.price}}</ins> 
+                 {% if i.discount is not None %}
+                <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
+                {% endif %} 
+                <button class="btn btn-primary rounded">ADD TO CART</button>
+                
+            </div>
+            {% endfor %} {% endcomment %}
+            
+
         </div>
        
     </div>

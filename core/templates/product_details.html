@@ -15,16 +15,19 @@
         <div class="row">
 
             <div class="col-md-10 mt-3 p-4 shadow border d-grid gap-2 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" >
-                <h6 class="m-2">Vegetabels</h6>
+                <img src="/media/{{product.picture}}" alt="" >
+                <h6 class="m-2">{{product.title}}</h6>
                 <small class="d-block pt-3">quantity</small>
-                <span><small>Made by </small><a href="#">Bunys</a></span>
-                <div class="d-inline"><ins>Rs 115</ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span></div>
+                <span><small>Made by </small><a href="#">{{product.brand}}</a></span>
+                <div class="d-inline"><ins>Rs {{product.price}}
+                  {%if product.discount is not None%}
+                </ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">{{product.discount.percentage}}% OFF</span></div>
+                {%endif%}
                 <button class="btn btn-primary rounded mt-3">ADD TO CART</button>
             </div>
             <div class="col-md-10 shadow border mt-3 p-4 mb-5 d-grid gap-2 ">
                 <h4>About This Item</h4>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repudiandae voluptatem natus inventore cum molestias nisi, est dolore reiciendis quos? Explicabo in illum perspiciatis neque maxime suscipit consequuntur officia dolore delectus.</p>
+                <p> {{ product.disc|default:"No description available" }}</p>
             </div>
            
           

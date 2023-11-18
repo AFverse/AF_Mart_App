@@ -10,40 +10,36 @@
     <h1>Categories</h1>
     <div class="container ">
 
+        {% for cat in pCat %}
+
+
+
+
         <div class="row border p-2 shadow rounded m-2">
             <div class="categories bg-warning p-3 rounded">
-                <h3>Fruits & Vegetables</h3>
-                <p>Fruits, Vegetables, Potato, Tomato, Onion, Banana</p>
+                <h3> {{cat.name}} </h3>
+                <p>
+                    {% for subcat in cat.subCat.all %}
+                        {{ subcat.name }}
+                    {% endfor %}
+                </p>
             </div>
+
+            {%for i in  cat.subCat.all%}
             <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
+              <a href= "{% url 'product_by_ctg' i.id  %} ">  <img src=  "/media/{{i.img}}"   alt="" height="180" width="180">  </a>
+              <h6 class="m-2">{{i.name}}</h6>
             </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
-            <div class="col-md-3 text-center p-3 ">
-                <img src="https://freepngimg.com/save/17241-bread-png-7/714x434" alt="" height="180" width="180">
-                <h6 class="m-2">Vegetabels</h6>
-            </div>
+
+            {%endfor%}
+
+
+
+           
         </div>
+
+
+        {% endfor %} 
        
     </div>
 
