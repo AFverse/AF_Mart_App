@@ -15,7 +15,7 @@ def send_otp(phone):
     OTP.objects.update_or_create(phone = phone, defaults={"otp":otp, "validity":validity, "verified":False})
     
     print(otp)
-    return Response("opt send successfully!")
+    return "opt send successfully!"
 
 
 def new_token():
