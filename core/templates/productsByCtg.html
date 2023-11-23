@@ -30,9 +30,9 @@
                         <h6 class="m-2">{{ i.title }}</h6>
                         <small class="d-block pt-3">quantity</small>
                         <div class="d-inline">
-                            <ins>Rs {{ i.price }}</ins>
+                            <ins>Rs {{ i.get_discounted_price }}</ins>
                             {% if i.discount is not None %}
-                                <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span>
+                                <del>Rs {{i.price}}</del> <span class="badge rounded-pill text-bg-warning d-inline-block">50% OFF</span>
                             {% endif %}
                         </div>
                         <button class="btn btn-primary rounded">ADD TO CART</button>

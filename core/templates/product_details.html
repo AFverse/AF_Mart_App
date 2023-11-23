@@ -19,9 +19,62 @@
                 <h6 class="m-2">{{product.title}}</h6>
                 <small class="d-block pt-3">quantity</small>
                 <span><small>Made by </small><a href="#">{{product.brand}}</a></span>
-                <div class="d-inline"><ins>Rs {{product.price}}
+
+
+{% comment %} testing code for performing variations......               {% endcomment %}
+
+{% if has_flavors %}
+  <label for="flavor">Select Flavor:</label>
+  <select id="flavor" name="flavor">
+    {% for flavor in product.variation_set.flavor %}
+      <option value="{{ flavor.variation_value }}">{{ flavor.variation_value }}</option>
+    {% endfor %}
+  </select>
+{% endif %}
+
+{% if has_sizes %}
+  <label for="size">Select Size:</label>
+  <select id="size" name="size">
+    {% for size in product.variation_set.sizes %}
+      <option value="{{ size.variation_value }}">{{ size.variation_value }}</option>
+    {% endfor %}
+  </select>
+{% endif %}
+
+
+
+
+<script>
+  function updatePrice() {
+    var flavorSelect = document.getElementById("flavor");
+    var sizeSelect = document.getElementById("size");
+    var priceDisplay = document.getElementById("price");
+
+    // Get the selected values from the dropdowns
+    var selectedFlavor = flavorSelect.value;
+    var selectedSize = sizeSelect.value;
+
+    // Find the corresponding variation in the flavors and sizes lists
+    var selectedFlavorObj = flavors.find(variation => variation.variation_value === selectedFlavor);
+    var selectedSizeObj = sizes.find(variation => variation.variation_value === selectedSize);
+
+    // Update the displayed price
+    var newPrice = parseFloat(selectedFlavorObj.price) + parseFloat(selectedSizeObj.price);
+    priceDisplay.innerHTML = "Price: $" + newPrice.toFixed(2);
+  }
+</script>
+
+
+
+{% comment %} above is rough code for variatin control {% endcomment %}
+
+
+
+                
+                
+                <div class="d-inline"><ins>Rs {{product.get_discounted_price}}
                   {%if product.discount is not None%}
-                </ins> <del>Rs 250</del> <span class="badge rounded-pill text-bg-warning d-inline-block">{{product.discount.percentage}}% OFF</span></div>
+                </ins> <del>Rs {{product.price}}</del> <span class="badge rounded-pill text-bg-warning d-inline-block">{{product.discount.percentage}}% OFF</span></div>
                 {%endif%}
                 <button class="btn btn-primary rounded mt-3">ADD TO CART</button>
             </div>

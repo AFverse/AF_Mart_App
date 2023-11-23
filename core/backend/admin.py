@@ -27,9 +27,9 @@ class UserAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ['title', 'price', 'brand', 'inventory', 'created_at']
     
-@register(ProductVariation)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['product', 'name', 'price', 'created_at']
+# @register(ProductVariation)
+# class UserAdmin(admin.ModelAdmin):
+#     list_display = ['product', 'name', 'price', 'created_at']
     
 @register(Cart_itmes)
 class UserAdmin(admin.ModelAdmin):
@@ -47,3 +47,6 @@ class UserAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ['product', 'quantity', 'is_in_cart' , 'created_at']
 
+@register(Variation)
+class UserADmin(admin.ModelAdmin):
+    list_display = ['product','variation_category','variation_value' ,'is_active','created_date']
