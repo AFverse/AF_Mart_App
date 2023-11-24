@@ -31,12 +31,22 @@ from django.shortcuts import render, get_object_or_404
 from .models import Product
 
 def ProductDetails(request, id):
-    obj = get_object_or_404(Product, id=id)
-    flavors = obj.variation_set.filter(variation_category='flavor')
-    sizes = obj.variation_set.filter(variation_category='size')
+    product = get_object_or_404(Product, id=id)
+    has_variations = product.has_variations
+    variations = None
+    unique_categories = None
+    if has_variations:
+        variations = Variation.objects.filter(product = product)
+        unique_categories = (Variation.objects.filter(product=product).values_list('variation_category__name', flat=True).distinct())
+        
 
-    context = {'product': obj, 'flavors': flavors, 'sizes': sizes, 'has_flavors': flavors.exists(), 'has_sizes': sizes.exists()}
+    context = {
+        'product': product,
+        'variations':variations,
+        'unique_categories':unique_categories,
+        }
     return render(request, 'product_details.html', context)
+    # return HttpResponse(variations)
 
 
 
