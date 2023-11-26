@@ -49,4 +49,8 @@ class UserAdmin(admin.ModelAdmin):
 
 @register(Variation)
 class UserADmin(admin.ModelAdmin):
-    list_display = ['product','variation_category','variation_value' ,'is_active','created_date']
+    list_display = ['product' ,'variation_value' ,'is_active','created_date']
+    
+@register(VeriationsCategory)
+class UserADmin(admin.ModelAdmin):
+    list_display = ['name']
