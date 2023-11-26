@@ -38,15 +38,3 @@ def ProductDetails(request, id):
     context = {'product': obj, 'flavors': flavors, 'sizes': sizes, 'has_flavors': flavors.exists(), 'has_sizes': sizes.exists()}
     return render(request, 'product_details.html', context)
 
-
-
-
-    # obj=Product.objects.get(id=id)
-    # # has_flavors = obj.variation_set.filter(variation_category='flavor').exists()
-    # # has_sizes = obj.variation_set.filter(variation_category='size').exists()
-
-    # flavors = serialize('json', obj.variation_set.filter(variation_category='flavor'))
-    # sizes = serialize('json', obj.variation_set.filter(variation_category='size'))
-
-    # context = {'product': obj, 'has_flavors': has_flavors, 'has_sizes': has_sizes}
-    # return render(request, 'product_details.html', context)

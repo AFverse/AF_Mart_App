@@ -11,6 +11,7 @@ urlpatterns = [
     path('reset_pass_form/<email>/<token>/', views.reset_pass_form, name='reset_pass_form'),
     path('reset_pass_confirm/', views.reset_pass_confirm, name='reset_pass_confirm'),
     path('userdata/', views.userdata, name='userdata'),
+    path('celery/', views.test, name='celery'),
     
   
 ]
