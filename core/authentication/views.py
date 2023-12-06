@@ -181,6 +181,7 @@ def reset_pass_confirm(request):
 
 
 
+
 # @api_view(['POST'])
 # def request_otp(request):
 #     phone = request.data.get('phone')
@@ -317,3 +318,23 @@ def reset_pass_confirm(request):
 def userdata(request):
     return Response()
 
+
+
+
+
+
+
+from .tasks import loop
+
+def test(request):
+    loop.delay()
+    return HttpResponse("celery testing...")
+
+
+# moduels to be installed----->
+# pip install celery
+# pip instll redis
+# pip install django-celery-results
+
+# To activate another terminal for celery task
+# celery -A core.celery worker --pool=solo -l info

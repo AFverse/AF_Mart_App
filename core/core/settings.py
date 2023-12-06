@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     
 ]+[
     'authentication',
+    'django_celery_results'
    ]
 
 MIDDLEWARE = [
@@ -173,3 +174,16 @@ REST_FRAMEWORK = {
         'backend.authentication.TokenAuthentication',
     ]
 }
+
+
+
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:5672/0'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_RESULT_BACKEND = 'django-db'
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
