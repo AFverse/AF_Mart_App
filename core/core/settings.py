@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     
-    'backend',
     
-]+[
+    
+    ]+[
     'authentication',
+    'backend',
+    'apiViews',
     'django_celery_results'
    ]
 
