@@ -34,9 +34,36 @@ class categoriesViews(views.APIView):
             return Response({'status':200, 'message':'These are products according to the category', 'payload': serializer.data})
         
         else:
-            return Response({'message': 'input valid id please'})
+            return Response({'message': 'input valid id please'})
         
 class productViews(views.APIView):
+    
+    def get(self, request, *args, **kwargs):
+        topSell = self.request.query_params.get('topSell')
+        recommended = self.request.query_params.get('recommended')
+        featured = self.request.query_params.get('featured')
+        
+        products = Product.objects.all()[:1]
+        if topSell:
+            products = Product.objects.filter(top_selling = True)
+            
+        if recommended:
+            print("recommended")
+            products = Product.objects.filter(is_recommended = True)
+    
+        if featured:
+            products = Product.objects.filter(is_featured = True)
+        
+        serializer = productSerializer(products, many = True)
+        return Response({ 'status': 200, 'message': 'These are products', 'payload': serializer.data })
+        
+    
+    def post(self, request, *args, **kwargs):
 
-    def post(request, self):
-        pass
+        slg = self.request.data.get('slug')
+        try:
+            obj = Product.objects.get(slug = slg)
+        except Exception as e:
+            print("Error to get product by slug", e) 
+        serializer = productSerializer(obj)
+        return Response({ 'status': 200, 'message': 'These are products', 'payload': serializer.data })

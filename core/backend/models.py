@@ -37,6 +37,9 @@ class Product(models.Model):
     inventory = models.PositiveIntegerField(null=True, blank=True)
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     has_variations = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
+    top_selling = models.BooleanField(default=False)
+    is_recommended = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
