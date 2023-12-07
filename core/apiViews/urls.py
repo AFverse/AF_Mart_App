@@ -1,6 +1,10 @@
 from django.urls import path
-from . import views 
+from .views import *
+
+
 
 urlpatterns = [
-    path('getCategories/', views.categoriesViews.as_view(), name="getCategories")
+    path('getCategories/', categoriesViews.as_view(), name="getCategories"),
+    path('getCategories/<int:id>/', categoriesViews.as_view(), name="getCategoriesWithId"),
 ]
+   
