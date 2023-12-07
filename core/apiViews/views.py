@@ -20,12 +20,23 @@ class categoriesViews(views.APIView):
     def post(self, request, *args, **kwargs):
 
         id = self.request.data.get('id')
+        ctg_id = self.request.data.get('ctg_id')
         if id is not None:
-
             pc=ParentCategory.objects.get(id=id)
             subCategories=pc.subCat.all()
             serializer = subCatSerializer(subCategories, many = True)
             return Response({'status':200, 'message':'These are producs sub categories according to parent category', 'payload': serializer.data})
         
+        if ctg_id is not None:
+            ctg=Category.objects.get(id=ctg_id)
+            products = ctg.products.all()
+            serializer = productSerializer(products, many = True)
+            return Response({'status':200, 'message':'These are products according to the category', 'payload': serializer.data})
+        
         else:
-            return HttpResponse('input valid id please')
+            return Response({'message': 'input valid id please'})
+        
+class productViews(views.APIView):
+
+    def post(request, self):
+        pass

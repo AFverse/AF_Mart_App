@@ -5,6 +5,7 @@ import uuid
 class ParentCategory(models.Model):
     name = models.CharField(max_length=100)
     disc = models.TextField()
+    img = models.ImageField(upload_to='parentCategory/images', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
