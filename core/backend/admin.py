@@ -25,13 +25,13 @@ class UserAdmin(admin.ModelAdmin):
     
 @register(Product)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['title', 'price', 'brand', 'inventory', 'created_at']
+    list_display = ['id', 'title', 'price', 'brand', 'inventory', 'created_at']
     
 # @register(ProductVariation)
 # class UserAdmin(admin.ModelAdmin):
 #     list_display = ['product', 'name', 'price', 'created_at']
     
-@register(Cart_itmes)
+@register(CartItmes)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['product', 'quantity', 'created_at']
     
