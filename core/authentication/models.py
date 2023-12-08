@@ -3,7 +3,7 @@ from .userManager import *
 from django.contrib.auth.models import User, AbstractUser
 import uuid
 
-class User(AbstractUser):
+class cUser(AbstractUser):
     username =  None
     fullname = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
@@ -34,7 +34,7 @@ class OTP(models.Model):
     
 class Token(models.Model):
     token = models.CharField(max_length=5000) 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Tokens_set')
+    user = models.ForeignKey(cUser, on_delete=models.CASCADE, related_name='Tokens_set')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
@@ -42,7 +42,7 @@ class Token(models.Model):
     
 class PassResetToken(models.Model):
     token = models.CharField(max_length=5000) 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pass_reset_tokens_set')
+    user = models.ForeignKey(cUser, on_delete=models.CASCADE, related_name='pass_reset_tokens_set')
     validity = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     

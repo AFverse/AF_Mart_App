@@ -3,7 +3,7 @@ from django.contrib.admin import register
 from authentication.models import *
 # Register your models here.
 
-@register(User)
+@register(cUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'email', 'phone', 'fullname', 'created_at']
 

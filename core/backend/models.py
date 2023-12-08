@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import *
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from authentication.models import cUser
 import uuid
 
 class ParentCategory(models.Model):
@@ -93,7 +94,7 @@ class VeriationsCategory(models.Model):
 
 
 class Reviews(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(cUser, on_delete=models.CASCADE, related_name='reviews')
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='reviews')
     rating = models.FloatField()
     comment = models.TextField()
@@ -129,7 +130,7 @@ class Brand(models.Model):
 
 
 class CartItmes(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(cUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     
@@ -154,14 +155,14 @@ class Order(models.Model):
         ('completed', 'COMPLETED')
     ]
     order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(cUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_OPTIONS, default='cart')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     
 class UserItem(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(cUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     is_in_cart = models.BooleanField(default=False)
