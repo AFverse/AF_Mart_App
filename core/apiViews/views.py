@@ -43,12 +43,11 @@ class productViews(views.APIView):
         recommended = self.request.query_params.get('recommended')
         featured = self.request.query_params.get('featured')
         
-        products = Product.objects.all()[:1]
+        products = Product.objects.all()[:10]
         if topSell:
             products = Product.objects.filter(top_selling = True)
             
         if recommended:
-            print("recommended")
             products = Product.objects.filter(is_recommended = True)
     
         if featured:
