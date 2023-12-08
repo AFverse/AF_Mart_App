@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework import views 
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 from backend.models import *
 
 from .serializers import *
@@ -66,3 +68,30 @@ class productViews(views.APIView):
             print("Error to get product by slug", e) 
         serializer = productSerializer(obj)
         return Response({ 'status': 200, 'message': 'These are products', 'payload': serializer.data })
+    
+    
+class addToCartView(views.APIView):
+    
+    def post(self, request, *args, **kwargs):
+        
+        id = request.data.get('id')
+        quantity = request.data.get('quantity')
+        
+        if not id or not quantity: 
+            raise ValidationError("Both Product ID and quantity are required.")
+
+        try:
+            productObj = Product.objects.get(id = id)
+            
+            User = get_user_model()
+            user = User.objects.get(pk=request.user.pk)
+            
+            cartItemObj = CartItmes.objects.create(
+                user = user,
+                product = productObj,
+                quantity = quantity
+            )
+            serializer = cartItemsSerializer(cartItemObj)
+            return Response({ 'status': 201, 'message': 'Product add to cart successfully', 'payload': serializer.data })
+        except Product.DoesNotExist:
+            raise ValidationError("Product does not exist!")

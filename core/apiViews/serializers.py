@@ -18,6 +18,12 @@ class productSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+
+
+class cartItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItmes
+        fields = '__all__'
         
 
         

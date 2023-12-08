@@ -1,5 +1,6 @@
 from django.db import models
 from authentication.models import *
+from django.contrib.auth.models import User
 import uuid
 
 class ParentCategory(models.Model):
@@ -127,7 +128,7 @@ class Brand(models.Model):
 
 
 
-class Cart_itmes(models.Model):
+class CartItmes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
