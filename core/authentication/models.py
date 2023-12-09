@@ -2,18 +2,13 @@ from django.db import models
 from .userManager import *
 from django.contrib.auth.models import User, AbstractUser
 import uuid
+from django.contrib.auth import get_user_model
 
 class cUser(AbstractUser):
     username =  None
-    fullname = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100, unique=True)
     phone = models.CharField(unique=True, max_length=13)
-    date_of_birth = models.DateField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='authentication', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='profile')
+    
 
     objects = UserManager()
 
@@ -22,6 +17,8 @@ class cUser(AbstractUser):
 
     def __str__(self):
         return self.phone
+        
+User = get_user_model()
     
 class OTP(models.Model):
     phone = models.CharField(max_length=9)
@@ -34,7 +31,7 @@ class OTP(models.Model):
     
 class Token(models.Model):
     token = models.CharField(max_length=5000) 
-    user = models.ForeignKey(cUser, on_delete=models.CASCADE, related_name='Tokens_set')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Tokens_set')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
@@ -42,7 +39,7 @@ class Token(models.Model):
     
 class PassResetToken(models.Model):
     token = models.CharField(max_length=5000) 
-    user = models.ForeignKey(cUser, on_delete=models.CASCADE, related_name='pass_reset_tokens_set')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pass_reset_tokens_set')
     validity = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     

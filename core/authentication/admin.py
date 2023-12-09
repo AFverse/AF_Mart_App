@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.admin import register 
-from authentication.models import *
+from .models import *
+
 # Register your models here.
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'email', 'phone', 'fullname', 'created_at']
+    list_display = ['id', 'phone']
 
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):
