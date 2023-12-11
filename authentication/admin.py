@@ -6,7 +6,7 @@ from .models import *
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'phone']
+    list_display = ['first_name', 'phone', 'email']
 
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):

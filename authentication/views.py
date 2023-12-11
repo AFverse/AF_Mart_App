@@ -23,7 +23,12 @@ def alert(request):
 def requestOtp(request):
     if request.method == "POST":
         phone = request.POST.get('phone')
-        
+        if phone and phone[0] == '0':
+            messages.error(request, "Enter Phone Number Without 0")
+            return HttpResponseRedirect(request.path_info)
+        if len(phone)  is not 10:
+            messages.error(request, "Invalid Phone Number!")
+            return HttpResponseRedirect(request.path_info)
         if phone:
             if User.objects.filter(phone = phone).exists():
                 messages.error(request, "Phone already exists!")
@@ -64,8 +69,11 @@ def verifyOtp(request, phone):
 
 def createAccount(request, phone):
     if request.method == "POST":
-        fullname = request.POST.get('fullname')
+        image = request.FILES.get('image')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        dob = request.POST.get('dob')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         
@@ -75,7 +83,7 @@ def createAccount(request, phone):
         otp_obj = get_object_or_404(OTP, phone = phone, verified = True)
         otp_obj.delete()
         
-        User.objects.create(phone = phone, email = email, fullname = fullname, password = make_password(password1))
+        User.objects.create(phone = phone, email = email, date_of_birth = dob, first_name = first_name, last_name = last_name, image = image, password = make_password(password1))
         messages.success(request, "Account created successfully!")
         return HttpResponseRedirect(request.path_info)
     

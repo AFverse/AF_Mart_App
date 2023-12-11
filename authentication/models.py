@@ -8,9 +8,8 @@ class cUser(AbstractUser):
     username =  None
     phone = models.CharField(unique=True, max_length=13)
     image = models.ImageField(upload_to='profile')
-    
- 
- 
+    date_of_birth = models.DateField(null=True, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = "phone"
