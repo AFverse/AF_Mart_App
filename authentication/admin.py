@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import register 
 from .models import *
 
-# Register your models here.
+admin.site.site_header = 'AF_Mart_Application'
+
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
