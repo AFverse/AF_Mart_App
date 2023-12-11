@@ -25,7 +25,7 @@ class UserAdmin(admin.ModelAdmin):
     
 @register(Product)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'price', 'brand', 'inventory', 'created_at']
+    list_display = [ 'title', 'price', 'brand', 'inventory', 'category', 'id']
     
 # @register(ProductVariation)
 # class UserAdmin(admin.ModelAdmin):
