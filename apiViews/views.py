@@ -128,5 +128,5 @@ class addToCartView(views.APIView):
 class CheckOutView(views.APIView):
     
     def post(self, request, *args, **kwargs):
-        
+        pass
 
