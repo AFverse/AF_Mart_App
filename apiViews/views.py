@@ -123,3 +123,10 @@ class addToCartView(views.APIView):
 
         except Product.DoesNotExist:
             raise ValidationError("Product does not exist!")
+        
+
+class CheckOutView(views.APIView):
+    
+    def post(self, request, *args, **kwargs):
+        
+

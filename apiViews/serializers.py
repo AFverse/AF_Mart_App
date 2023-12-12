@@ -8,7 +8,6 @@ class categorySerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 
-
 class subCatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -23,6 +22,18 @@ class productSerializer(serializers.ModelSerializer):
 class cartItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItmes
+        fields = '__all__'
+        
+
+class orderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+        
+
+class orderItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItems
         fields = '__all__'
         
 

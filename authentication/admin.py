@@ -7,7 +7,7 @@ admin.site.site_header = 'AF_Mart_Application'
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'phone', 'email']
+    list_display = ['id', 'phone', 'email']
 
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):
