@@ -33,7 +33,7 @@ class UserAdmin(admin.ModelAdmin):
     
 @register(CartItmes)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['product', 'quantity', 'created_at']
+    list_display = ['product', 'id', 'quantity', 'created_at']
     
 @register(OrderItems)
 class UserAdmin(admin.ModelAdmin):
