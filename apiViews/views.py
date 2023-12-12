@@ -127,6 +127,32 @@ class addToCartView(views.APIView):
 
 class CheckOutView(views.APIView):
     
-    def post(self, request, *args, **kwargs):
-        pass
+    def post(self, request):
+        cartItems = request.data.get('cartItems')
+        phone = request.data.get('phone')
+        recipient_name = request.data.get('recipient_name')
+        address = request.data.get('address')
+        city = request.data.get('city')
+        total_price = request.data.get('total_price')
+        
+        if cartItems is not None:
+            orderObj = Order.objects.create(
+                user = request.user,
+                phone = phone,
+                recipient_name = recipient_name,
+                address = address,
+                city = city,
+                total_price = total_price,
+            )
+            for itemId in cartItems:
+                cartObj = CartItmes.objects.get(id = itemId)
+                orderItemObj = OrderItems.objects.create(
+                    order = orderObj,
+                    product = cartObj.product,
+                    quantity = cartObj.quantity,
+                    price = 3.22,
+                )
+                cartObj.delete()
+            serializer = orderSerializer(orderObj)
+            return Response({'status':200, "message":"Order placed successfully!", "payload":serializer.data })
 
