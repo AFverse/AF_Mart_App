@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import User, OTP 
@@ -12,9 +13,12 @@ from .utils import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email, ValidationError
+from .serializer import *
 
 
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def alert(request):
@@ -70,9 +74,22 @@ def verifyOtp(request, phone):
 def createAccount(request, phone):
     if request.method == "POST":
         image = request.FILES.get('image')
+
+        max_size = 3 * 1024 * 1024  # 3 MB in bytes
+        if image and image.size > max_size:
+            raise ValidationError("Image size should not exceed 1 MB.")
+        
+
+          # Check if the file has a valid image extension
+        allowed_extensions = ['.jpg', '.jpeg', '.png']
+        if image and not any(image.name.lower().endswith(ext) for ext in allowed_extensions):
+            raise ValidationError("Invalid file format. Please upload a .jpg, .jpeg, or .png file.")
+
+
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        email = User.objects.normalize_email(email)
         dob = request.POST.get('dob')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
@@ -233,26 +250,25 @@ def reset_pass_confirm(request):
     
 #     User.objects.create(phone = phone, email = email, fullname = fullname, password = make_password(password))
 #     return Response("account_created_successfully!")
-    
+ 
 
-# @api_view(['POST'])
-# def login_user(request):
-#     phone = request.data.get('phone')
-#     password = request.data.get('password')
-#     email = request.data.get('email')
-    
-#     if email:
-#         user = get_object_or_404(User, email = email)
-        
-#     elif phone:
-#         user = get_object_or_404(User, phone = phone)
-#     else:
-#         return Response("data_missing", 400)
-    
-#     if check_password(password, user.password):
-#         return token_response(user)
-#     else:
-#         return Response("incorrect_password", 400)
+class userLoginView(APIView):
+
+    def POST(self, request):
+        data = request.data
+        serializer = loginSerializer(data = data)
+        if serializer.is_valid():
+            phone = serializer.data['phone']
+            password = serializer.data['password']
+            user = authenticate(phone = phone, password = password)
+            if user is None:
+                return Response({'status':400, 'message': 'Invalid password'})
+            
+            refresh = RefreshToken.for_user(user)
+            return {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    }
 
     
 

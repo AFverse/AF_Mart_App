@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.admin import register 
 from .models import *
-
+from django.contrib.auth.models import User
 admin.site.site_header = 'AF_Mart_Application'
-
+name = User.get_full_name
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'phone', 'email']
+    list_display = [name, 'phone', 'email']
 
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):
