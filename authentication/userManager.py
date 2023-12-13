@@ -1,5 +1,7 @@
 from django.contrib.auth.models import BaseUserManager
 from django.http import HttpResponse
+
+
 class UserManager(BaseUserManager):
 
     def create_user(self, phone, password=None, **extra):

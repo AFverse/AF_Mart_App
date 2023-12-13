@@ -30,6 +30,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=100)
+    quantity = models.CharField(max_length=50, null=True, blank=True)
     disc = models.TextField(null=True, blank=True)
     slug = models.SlugField()
     SKU = models.CharField(max_length=50)
