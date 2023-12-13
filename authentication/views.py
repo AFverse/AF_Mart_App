@@ -20,6 +20,27 @@ from .serializer import *
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+import vonage
+
+def send_sms(request):
+
+    client = vonage.Client(key="a91b0762", secret="Bn2GGqPQCAeAyR0A")
+    sms = vonage.Sms(client)
+
+    responseData = sms.send_message(
+        {
+            "from": "Vonage APIs",
+            "to": "923088976204",
+            "text": "A text message sent using the Nexmo SMS API",
+        }
+    )
+
+    if responseData["messages"][0]["status"] == "0":
+        print("Message sent successfully.")
+        return HttpResponse('Message send successfully')
+    else:
+        print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+        return HttpResponse('Message faield due to some errors.')
 
 def alert(request):
     return render(request, 'alert.html')

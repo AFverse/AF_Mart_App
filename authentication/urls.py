@@ -15,6 +15,8 @@ urlpatterns = [
     path('userdata/', views.userdata, name='userdata'),
     path('celery/', views.test, name='celery'),
     
+    path('send_sms/', views.send_sms, name='send_sms'),
+    
   
 ]+[
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
