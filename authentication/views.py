@@ -16,9 +16,32 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email, ValidationError
 from .serializer import *
+
+
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import get_user_model
-User = get_user_model()
+
+# import vonage
+
+# def send_sms(request):
+
+    # client = vonage.Client(key="a91b0762", secret="Bn2GGqPQCAeAyR0A")
+    # sms = vonage.Sms(client)
+
+    # responseData = sms.send_message(
+        # {
+    #         "from": "Vonage APIs",
+    #         "to": "923088976204",
+    #         "text": "A text message sent using the Nexmo SMS API",
+    #     }
+    # )
+
+    # if responseData["messages"][0]["status"] == "0":
+    #     print("Message sent successfully.")
+    #     return HttpResponse('Message send successfully')
+    # else:
+    #     print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+    #     return HttpResponse('Message faield due to some errors.')
+
 def alert(request):
     return render(request, 'alert.html')
 
@@ -234,19 +257,20 @@ def reset_pass_confirm(request):
             
 #     else:
 #         return Response('otp_expired', status=400)
-
-
-from rest_framework.response import Response
     
-class userRegistrationView(APIView):
-
-    def post(self, request, formate=None):
-
-        serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.instance
-            return Response({'Message': 'User registered Successfully'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+    
+# @api_view(['POST'])
+# def create_account(request):
+#     phone = request.data.get('phone')
+#     email = request.data.get('email')
+#     fullname = request.data.get('fullname')
+#     password = request.data.get('password')
+    
+#     otp_obj = get_object_or_404(OTP, phone = phone, verified = True)
+#     otp_obj.delete()
+    
+#     User.objects.create(phone = phone, email = email, fullname = fullname, password = make_password(password))
+#     return Response("account_created_successfully!")
  
 
 class userLoginView(APIView):

@@ -8,9 +8,6 @@ import datetime
 from rest_framework.permissions import BasePermission
 from django.template.loader import render_to_string
 
-# from twilio.rest import Client
-
-#Send OTP using tWilio 
 
 
 
