@@ -177,6 +177,8 @@ REST_FRAMEWORK = {
 }
 
 
+ACCOUNT_SID = 'AC7e6d3cc358752121a5aa70bc696f2214'
+AUTH_TOKEN = '699de527ba41fd2e4bc0f066e3b6bfda'
 
 
 # Celery Configuration
