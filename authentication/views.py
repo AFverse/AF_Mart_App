@@ -1,12 +1,10 @@
-from django.shortcuts import render
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from .models import User, OTP 
 from django.contrib.auth.hashers import make_password
 from .utils import *
@@ -16,9 +14,14 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email, ValidationError
 from .serializer import *
+from rest_framework.permissions import IsAuthenticated
 
 
-from rest_framework_simplejwt.tokens import RefreshToken
+
+
+
+
+
 
 # import vonage
 
@@ -128,24 +131,6 @@ def createAccount(request, phone):
     return render(request, 'accounts/createAccount.html', {"phone":phone})
     
 
-@api_view(['POST'])
-def login_user(request):
-    phone = request.data.get('phone')
-    password = request.data.get('password')
-    email = request.data.get('email')
-    
-    if email:
-        user = get_object_or_404(User, email = email)
-        
-    elif phone:
-        user = get_object_or_404(User, phone = phone)
-    else:
-        return Response("data_missing", 400)
-    
-    if check_password(password, user.password):
-        return token_response(user)
-    else:
-        return Response("incorrect_password", 400)
 
     
 
@@ -222,12 +207,6 @@ def reset_pass_confirm(request):
 
 
 
-
-
-
-
-
-
 # @api_view(['POST'])
 # def request_otp(request):
 #     phone = request.data.get('phone')
@@ -257,39 +236,6 @@ def reset_pass_confirm(request):
             
 #     else:
 #         return Response('otp_expired', status=400)
-    
-    
-# @api_view(['POST'])
-# def create_account(request):
-#     phone = request.data.get('phone')
-#     email = request.data.get('email')
-#     fullname = request.data.get('fullname')
-#     password = request.data.get('password')
-    
-#     otp_obj = get_object_or_404(OTP, phone = phone, verified = True)
-#     otp_obj.delete()
-    
-#     User.objects.create(phone = phone, email = email, fullname = fullname, password = make_password(password))
-#     return Response("account_created_successfully!")
- 
-
-class userLoginView(APIView):
-
-    def POST(self, request):
-        data = request.data
-        serializer = loginSerializer(data = data)
-        if serializer.is_valid():
-            phone = serializer.data['phone']
-            password = serializer.data['password']
-            user = authenticate(phone = phone, password = password)
-            if user is None:
-                return Response({'status':400, 'message': 'Invalid password'})
-            
-            refresh = RefreshToken.for_user(user)
-            return {
-                        'refresh': str(refresh),
-                        'access': str(refresh.access_token),
-                    }
 
     
 
@@ -366,20 +312,56 @@ def userdata(request):
 
 
 
+from rest_framework_simplejwt.tokens import RefreshToken
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 
 
+class userLoginView(APIView):
+    def post(self, request, format=None): 
+        serializer = userLoginSerializer(data = request.data)
+        if serializer.is_valid(raise_exception=True ):
+            phone = serializer.data.get('phone')
+            password = serializer.data.get('password')
+            user = authenticate(phone = phone, password = password)
+            if user is not None:
+                token = get_tokens_for_user(user)
+                return Response({'status': 200, 'token': token, 'message': 'Login success'}, status=status.HTTP_200_OK)
+            return Response({'status': 400, 'message': 'Invalid input'}, status=status.HTTP_400_BAD_REQUEST)
+            
+
+class userRegistrationView(APIView):
+
+    def post(self, request, formate=None):
+
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token = get_tokens_for_user(user)
+            return Response({'token': token, 'Message': 'User registered Successfully'},  status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class userProfielView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        serializer = userProfileViewSerializer(request.user)
+        return Response(serializer.data)
+
+
+# celery code
 from .tasks import loop
 
 def test(request):
     loop.delay()
     return HttpResponse("celery testing...")
 
-
-# moduels to be installed----->
-# pip install celery
-# pip instll redis
-# pip install django-celery-results
 
 # To activate another terminal for celery task
 # celery -A core.celery worker --pool=solo -l info

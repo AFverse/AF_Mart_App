@@ -1,78 +1,47 @@
-from rest_framework import serializers    
-from .models import *
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
-
-
 from rest_framework import serializers
-from .models import cUser  # Update the import
+from .models import cUser
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
-
+    password2 = serializers.CharField( style = {'input_type':'password'}, write_only = True)
     class Meta:
-        model = cUser  # Use your custom user model
-        fields = ('first_name', 'last_name', 'email', 'phone', 'password', 'password2')
-        extra_kwargs = {'password': {'write_only': True}}
+        model = cUser
+        fields = ['phone', 'email', 'password', 'password2']
+                  
 
     def validate(self, attrs):
-        password = attrs.get('password')
-        password2 = attrs.pop('password2', None)
+        password1 = attrs['password']
+        password2 = attrs['password2']
+        print("Password1:", password1)
+        print("Password2:", password2)
 
-        if password != password2:
-            raise serializers.ValidationError('Password and confirm password do not match!')
+        if password1 and password2 and password1 != password2:
+            raise serializers.ValidationError("Your entered passwords doesn't match!")
+        
+        max_size = 3 * 1024 * 1024  # 3 MB in bytes        
+        image = attrs.get('image')
+        if image and image.size > max_size:
+            raise serializers.ValidationError("Image size should not exceed 1 MB.")
+        
+          # Check if the file has a valid image extension
+        allowed_extensions = ['.jpg', '.jpeg', '.png']
+        if image and not any(image.name.lower().endswith(ext) for ext in allowed_extensions):
+            raise serializers.ValidationError("Invalid file format. Please upload a .jpg, .jpeg, or .png file.")
+        
+        return super().validate(attrs)
 
-        return attrs
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        password2 = validated_data.pop('password2')
        
+        return cUser.objects.create_user(**validated_data)
 
-        if password != password2:
-            raise serializers.ValidationError
+class userLoginSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(max_length=100)
+    class Meta:
+        model = cUser
+        fields = ['phone', 'password']
 
-        user = cUser(**validated_data)
-        user.set_password(password)  
-
-       
-        user.save()
-
-        return user
-
-
-  
-
-   
-
-
-
-
-
-# class UserRegistrationSerializer(serializers.ModelSerializer):
-#     password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
-
-#     class Meta:
-#         model = User
-#         fields = ('first_name', 'last_name', 'email', 'phone', 'password', 'password2')
-#         extra_kwargs = {'password': {'write_only': True}}
-
-#     def validate(self, attrs):
-#         password = attrs.get('password')
-#         password2 = attrs.pop('password2', None)  # Remove password2 from the validated data
-
-#         if password != password2:
-#             raise serializers.ValidationError('Password and confirm password do not match!')
-
-#         return attrs
- 
-#     def create(self, validated_data):
-#         return User.objects.create_user(**validated_data)
-
-
-
-
-# class loginSerializer(serializers.Serializer):
-#     phone = serializers.CharField()
-#     password = serializers.CharField()
+class userProfileViewSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = cUser
+      fields = ['first_name','last_name', 'phone', 'email', 'date_of_birth', 'image', 'last_login']

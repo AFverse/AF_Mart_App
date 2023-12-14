@@ -7,7 +7,7 @@ name = User.get_full_name
 
 @register(cUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = [name, 'phone', 'email']
+    list_display = ['id', name, 'phone', 'email']
 
 @register(OTP)
 class UserAdmin(admin.ModelAdmin):

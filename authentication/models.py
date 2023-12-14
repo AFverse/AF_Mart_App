@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 class cUser(AbstractUser):
     username =  None
     phone = models.CharField(unique=True, max_length=13)
-    image = models.ImageField(upload_to='profile')
+    email = models.EmailField(max_length=50, unique=True)
+    image = models.ImageField(upload_to='profile', null=True)
     date_of_birth = models.DateField(null=True, blank=True)
 
     objects = UserManager()
