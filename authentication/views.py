@@ -308,9 +308,7 @@ def reset_pass_confirm(request):
 @permission_classes([IsAuthenticatedUser])
 def userdata(request):
     return Response()
-
-
-
+# function to generate authentication token......
 
 from rest_framework_simplejwt.tokens import RefreshToken
 def get_tokens_for_user(user):
@@ -353,6 +351,22 @@ class userProfielView(APIView):
     def get(self, request):
         serializer = userProfileViewSerializer(request.user)
         return Response(serializer.data)
+
+class userPasswordChangeView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = userPasswordChangeSerializer(data = request.data, context = {'user' : request.user})
+        if serializer.is_valid(raise_exception=True):
+            return Response( {'message': 'Password changed Successfully!'}, status = status.HTTP_200_OK)
+        return Response({'message': 'Error Occured!'}, status = status.HTTP_400_BAD_REQUEST)
+        
+class forgotPasswordEmailSend(APIView):
+    def post(self, request, format = None):
+        serializer = userForgotPasswordResetEmailSendSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return Response({'message': 'Password reset Email has been sent. Please check your Email'}, status= status.HTTP_200_OK)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
 
 
 # celery code

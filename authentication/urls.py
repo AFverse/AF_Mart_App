@@ -19,8 +19,12 @@ urlpatterns = [
 ]+[
    
     path('login/', views.userLoginView.as_view(), name='login'),
-    path('regiser/', views.userRegistrationView.as_view()),
-    path('profile/', views.userProfielView.as_view()),
+    path('register/', views.userRegistrationView.as_view(), name='register'),
+    path('profile/', views.userProfielView.as_view(),name= 'profile'),
+    path('changePassword/', views.userPasswordChangeView.as_view(), name='changePassword'),
+    path('forgotPassword/', views.forgotPasswordEmailSend.as_view(), name='forgotPassword'),
+
+    
 
 
 ]+[
