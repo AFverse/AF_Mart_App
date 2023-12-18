@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
 from backend.models import *
 
 from .serializers import *
@@ -127,6 +128,8 @@ class addToCartView(views.APIView):
 
 class CheckOutView(views.APIView):
     
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         cartItems = request.data.get('cartItems')
         phone = request.data.get('phone')
@@ -135,9 +138,12 @@ class CheckOutView(views.APIView):
         city = request.data.get('city')
         total_price = request.data.get('total_price')
         
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        
         if cartItems is not None:
             orderObj = Order.objects.create(
-                user = request.user,
+                user = user,
                 phone = phone,
                 recipient_name = recipient_name,
                 address = address,

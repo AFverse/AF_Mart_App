@@ -239,70 +239,70 @@ def reset_pass_confirm(request):
 
     
 
-# @api_view(['POST'])
-# def pass_reset_email(request):
-#     phone  = request.data.get('phone')
-#     email  = request.data.get('email')
+@api_view(['POST'])
+def pass_reset_email(request):
+    phone  = request.data.get('phone')
+    email  = request.data.get('email')
     
-#     if phone:
-#         user = get_object_or_404(User, phone = phone)
-#         return send_pass_reset_email(user)
-#     elif email:
-#         user = get_object_or_404(User, email = email)
-#         return send_pass_reset_email(user)
-#     else:
-#         return Response("data missing!", 400)
+    if phone:
+        user = get_object_or_404(User, phone = phone)
+        return send_pass_reset_email(user)
+    elif email:
+        user = get_object_or_404(User, email = email)
+        return send_pass_reset_email(user)
+    else:
+        return Response("data missing!", 400)
     
     
-# @api_view(['GET'])
-# def reset_pass_form(request, email, token):
-#     token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
+@api_view(['GET'])
+def reset_pass_form(request, email, token):
+    token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
     
-#     if token_instance:
-#         if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
-#             context = {
-#                 'email':email,
-#                 'token':token,
-#                 # 'base_url':TEMPLATES_BASE_URL,
-#             }
-#             return render(request, 'accounts/new-pass-form.html', context)
-#         else:
-#             token_instance.delete()
-#             messages.error(request, 'Linked Expired')
-#             return redirect('alert')
-#     else:
-#         messages.info(request, "Instance Not found!")
-#         return redirect('alert')
+    if token_instance:
+        if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
+            context = {
+                'email':email,
+                'token':token,
+                # 'base_url':TEMPLATES_BASE_URL,
+            }
+            return render(request, 'accounts/new-pass-form.html', context)
+        else:
+            token_instance.delete()
+            messages.error(request, 'Linked Expired')
+            return redirect('alert')
+    else:
+        messages.info(request, "Instance Not found!")
+        return redirect('alert')
     
-# @api_view(['POST'])
-# def reset_pass_confirm(request):
-#     password1 = request.data.get('password1')
-#     password2 = request.data.get('password2')
-#     email = request.data.get('email')
-#     token = request.data.get('token')
-#     token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
+@api_view(['POST'])
+def reset_pass_confirm(request):
+    password1 = request.data.get('password1')
+    password2 = request.data.get('password2')
+    email = request.data.get('email')
+    token = request.data.get('token')
+    token_instance = PassResetToken.objects.filter(user__email = email, token = token).first()
     
-#     if token_instance:
-#         if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
-#             if password1 == password2:
-#                 user = token_instance.user 
-#                 user.password = make_password(password1)
-#                 user.save()
-#                 token_instance.delete()
-#                 Token.objects.filter(user = user).delete()
-#                 messages.success(request, "Password Updated successfully!")
-#                 return redirect('alert')
-#             else:
-#                 context = {
-#                 'email':email,
-#                 'token':token,
-#                 'error': "Passowrd and confirm password must be same!",
-#                 }
-#             return render(request, 'accounts/new-pass-form.html', context)
+    if token_instance:
+        if datetime.datetime.utcnow() < token_instance.validity.replace(tzinfo=None):
+            if password1 == password2:
+                user = token_instance.user 
+                user.password = make_password(password1)
+                user.save()
+                token_instance.delete()
+                Token.objects.filter(user = user).delete()
+                messages.success(request, "Password Updated successfully!")
+                return redirect('alert')
+            else:
+                context = {
+                'email':email,
+                'token':token,
+                'error': "Passowrd and confirm password must be same!",
+                }
+            return render(request, 'accounts/new-pass-form.html', context)
     
-#     else:
-#         messages.error(request, 'Linked Expired')
-#         return redirect('alert')
+    else:
+        messages.error(request, 'Linked Expired')
+        return redirect('alert')
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedUser])
