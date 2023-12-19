@@ -130,6 +130,13 @@ class CheckOutView(views.APIView):
     
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        orderObj = Order.objects.filter(user = user)
+        serializer = orderSerializer(orderObj, many = True)
+        return Response(serializer.data)
+    
     def post(self, request):
         cartItems = request.data.get('cartItems')
         phone = request.data.get('phone')

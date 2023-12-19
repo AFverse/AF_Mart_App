@@ -160,7 +160,7 @@ class Order(models.Model):
     order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_OPTIONS, default='pending')
-    phone = models.CharField(unique=True, max_length=13)
+    phone = models.CharField(max_length=13)
     recipient_name = models.CharField(max_length=50)
     address = models.TextField()
     city = models.CharField(max_length=50)
