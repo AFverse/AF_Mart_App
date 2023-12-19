@@ -167,6 +167,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     
     ]
+# password reset email expire in seconds
+PASSWORD_RESET_TIMEOUT = 1200
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -179,7 +181,6 @@ ACCOUNT_SID = 'AC7e6d3cc358752121a5aa70bc696f2214'
 AUTH_TOKEN = '699de527ba41fd2e4bc0f066e3b6bfda'
 
 from datetime import timedelta
-...
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),

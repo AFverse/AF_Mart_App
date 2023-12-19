@@ -71,13 +71,35 @@ class userForgotPasswordResetEmailSendSerializer(serializers.Serializer):
         fields = ['email']
     def validate(self, attrs):
         email = attrs.get('email')
-        if cUser.objects.filter(email = email).exists:
+        if cUser.objects.filter(email = email).exists():
             user = cUser.objects.get(email = email)
             uid = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            link = 'http://127.0.0.1:8000/auth/resetPassword/'+uid+'/'+token
+            link = 'http://127.0.0.1:8000/auth/reset_password/'+uid+'/'+token
             print(user.first_name, uid, token, link)
             return attrs
 
         else:
-            raise ValueError('Your entered email is not registered!')
+            raise serializers.ValidationError('Your entered email is not registered!')
+class forgotPasswordReset(serializers.Serializer):
+    password = serializers.CharField( max_length = 100, write_only = True, style = {'input_type':'password'})
+    password2 = serializers.CharField(max_length = 100, write_only = True, style = {'input_type':'password'})
+    class Meta:
+        fields = ['password', 'password2']
+    def validate(self, attrs):
+        password = attrs['password']
+        password2 = attrs['password2']
+        
+        uid = self.context.get('uid')
+        token = self.context.get('token')
+       
+        if password != password2:
+            raise serializers.ValidationError('Password and Confirm Password Does not match!')
+        
+        uid = smart_str(urlsafe_base64_decode(uid))
+        user = cUser.objects.get(id = uid)
+        if not PasswordResetTokenGenerator().check_token(user, token):
+            raise serializers.ValidationError('Invalid token or expired!')
+        user.set_password(password)
+        user.save()
+        return attrs
