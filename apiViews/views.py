@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 from backend.models import *
 
 from .serializers import *
@@ -72,8 +74,18 @@ class productViews(views.APIView):
         serializer = productSerializer(obj)
         return Response({ 'status': 200, 'message': 'These are products', 'payload': serializer.data })
     
-    
 class addToCartView(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        UserCartItems = CartItmes.objects.filter(user = user)
+        if UserCartItems is not None:
+            serializer = cartItemsSerializer(UserCartItems, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"Message":"No Item in Cart"})
     
     def post(self, request, *args, **kwargs):
         
@@ -169,3 +181,44 @@ class CheckOutView(views.APIView):
             serializer = orderSerializer(orderObj)
             return Response({'status':200, "message":"Order placed successfully!", "payload":serializer.data })
 
+class ProductReview(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        id = request.query_params.get('id')
+        productObj = Product.objects.get(id = id)
+        prodReviews = productObj.reviews.all()
+        serializer = productReviewsSerializer(prodReviews, many = True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        User = get_user_model()
+        user = User.objects.get(pk=request.user.pk)
+        productId = request.data.get('productId')
+        rating = request.data.get('rating')
+        comment = request.data.get('comment')
+        
+        prodObj = get_object_or_404(Product, id = productId)
+        existingReview = Reviews.objects.filter(user = user, product = prodObj).exists()
+       
+    
+        if existingReview:
+            return Response({"Message":"You can only post one review per product!"}, status = status.HTTP_400_BAD_REQUEST)
+        
+        orderObj = get_object_or_404(Order, user = user) 
+        
+        if orderObj and (orderObj.status == 'completed'):
+            print("condition passed")
+            prodReviewObj = Reviews.objects.create(
+                    user = user,
+                    product = prodObj,
+                    rating = rating, 
+                    comment = comment
+                )
+            serializer = productReviewsSerializer(prodReviewObj)
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        else:
+            return Response("You must have a completed order to post a review!", status=status.HTTP_400_BAD_REQUEST)
+        
