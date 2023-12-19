@@ -5,11 +5,11 @@ from backend.models import *
 
 @register(ParentCategory)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['name', 'disc', 'created_at']
+    list_display = ['name', 'desc', 'created_at']
     
 @register(Category)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['name', 'disc', 'parent_category', 'created_at']
+    list_display = ['name', 'desc', 'parent_category', 'created_at']
     
 @register(Reviews)
 class UserAdmin(admin.ModelAdmin):
@@ -25,7 +25,7 @@ class UserAdmin(admin.ModelAdmin):
     
 @register(Product)
 class UserAdmin(admin.ModelAdmin):
-    list_display = [ 'title', 'price', 'brand', 'inventory', 'category', 'id']
+    list_display = [ 'title', 'price', 'brand', 'inventory', 'category', 'id', 'slug']
     
 # @register(ProductVariation)
 # class UserAdmin(admin.ModelAdmin):

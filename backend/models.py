@@ -3,11 +3,13 @@ from authentication.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 import uuid
+from django.utils.text import slugify
 User = get_user_model()
 
 class ParentCategory(models.Model):
     name = models.CharField(max_length=100)
-    disc = models.TextField()
+    desc = models.TextField(blank = True, null = True)
+    discount = models.FloatField(null=True, blank=True)
     img = models.ImageField(upload_to='parentCategory/images', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -19,7 +21,8 @@ class ParentCategory(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    disc = models.TextField(null=True, blank=True)
+    desc = models.TextField(null=True, blank=True)
+    discount = models.FloatField(null=True, blank=True)
     img = models.ImageField(upload_to='categories/images')
     parent_category = models.ForeignKey(ParentCategory, null=True, blank=True, on_delete=models.CASCADE, related_name='subCat')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,9 +34,9 @@ class Category(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=100)
     quantity = models.CharField(max_length=50, null=True, blank=True)
-    disc = models.TextField(null=True, blank=True)
-    slug = models.SlugField()
-    SKU = models.CharField(max_length=50)
+    desc = models.TextField(null=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    SKU = models.CharField(blank=True, max_length=50)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     picture = models.ImageField(upload_to='product_images')
     discount = models.ForeignKey('Discount', on_delete=models.CASCADE, null=True, blank=True)
@@ -46,8 +49,17 @@ class Product(models.Model):
     is_recommended = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    def __str__(self):
-        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            self.slug = base_slug
+            counter = 1
+
+            while Product.objects.filter(slug=self.slug).exists():
+                self.slug = f"{base_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
 
     def get_discounted_price(self):
         if self.discount:
@@ -109,7 +121,7 @@ class Reviews(models.Model):
     
 class Discount(models.Model):
     name = models.CharField(max_length=100)
-    disc = models.TextField()
+    desc = models.TextField()
     percentage = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -120,7 +132,8 @@ class Discount(models.Model):
     
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField()
+    desc = models.TextField()
+    discount = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
@@ -174,7 +187,7 @@ class Order(models.Model):
 
     
 class UserItem(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     is_in_cart = models.BooleanField(default=False)
