@@ -55,11 +55,49 @@ Get a specific product details
 	body: {"id":"Product ID"}
 
 
+<-------------------AddToCart API endpoints--------------------------->
+
+Get all cart products for a specific user 
+	
+	url :  http://127.0.0.1:8000/api/addToCart
+	method : GET
+
+Add to cart a specific product with quantity 
+	
+	url :  http://127.0.0.1:8000/api/addToCart
+	method : POST
+	body: {
+		"id":"productID",
+		"quantity":"quantity of product"
+	}
+
+Remove from cart  
+	
+	url :  http://127.0.0.1:8000/api/addToCart
+	method : DELETE
+	body: {
+		"id":"productID"
+	}
 
 
+<-------------------CheckOut API endpoints--------------------------->
 
+Get list of orders with their curresponding order items 
+	
+	url :  http://127.0.0.1:8000/api/checkOut
+	method : GET
 
-
-
+Place order 
+	
+	url :  http://127.0.0.1:8000/api/checkOut
+	method : POST
+	body: {
+		"cartItems":[list of cart_items IDs],
+		"phone":"recipient phone",
+		"recipient_name":"recipient_name",
+		"address":"recipient address",
+		"city":"recipient city",
+		"total_price":"total_price",
+	}
 
 

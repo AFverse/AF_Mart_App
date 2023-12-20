@@ -101,7 +101,7 @@ class addToCartView(views.APIView):
             User = get_user_model()
             user = User.objects.get(pk=request.user.pk)
             
-            cartItemObj, created = CartItmes.objects.get(
+            cartItemObj, created = CartItmes.objects.get_or_create(
                 user = user,
                 product = productObj,
                 quantity = quantity
