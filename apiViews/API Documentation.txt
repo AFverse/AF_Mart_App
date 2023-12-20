@@ -101,3 +101,23 @@ Place order
 	}
 
 
+<-------------------Productreview API endpoints--------------------------->
+
+Get list of reviews for a specific product 
+	
+	url :  http://127.0.0.1:8000/api/productReviews/?id = productID
+	method : GET
+
+Place review after order 
+	
+	url :  http://127.0.0.1:8000/api/productReviews
+	method : POST
+	body: {
+		"productId":"productID",
+		"rating":"rating in b/w (1, 5)",
+		"comment":"comments of user",
+	}
+
+
+
+
