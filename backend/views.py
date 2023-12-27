@@ -12,6 +12,8 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from .models import *
 from django.core.serializers import serialize
+from django.shortcuts import render, get_object_or_404
+from .models import Product
 
 def Categories(request):
     pCat=ParentCategory.objects.all()
@@ -27,8 +29,7 @@ def ProductByCtg(request, id):
 # def ProductDetails(request, id):
 
 
-from django.shortcuts import render, get_object_or_404
-from .models import Product
+
 
 def ProductDetails(request, id):
     product = get_object_or_404(Product, id=id)

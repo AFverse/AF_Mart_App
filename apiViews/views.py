@@ -28,6 +28,7 @@ class categoriesViews(views.APIView):
 
         id = self.request.data.get('id')
         ctg_id = self.request.data.get('ctg_id')
+        brand_id = self.request.data.get('brand_id')
         if id is not None:
             pc=ParentCategory.objects.get(id=id)
             subCategories=pc.subCat.all()
@@ -39,7 +40,12 @@ class categoriesViews(views.APIView):
             products = ctg.products.all()
             serializer = productSerializer(products, many = True)
             return Response({'status':200, 'message':'These are products according to the category', 'payload': serializer.data})
-        
+
+        if brand_id is not None:
+            products = Product.objects.filter(brand__id = brand_id)
+            serializer = productSerializer(products, many = True)
+            return Response({'status':200, 'message':'These are products according to the brand', 'payload': serializer.data})
+
         else:
             return Response({'message': 'input valid id please'})
         
