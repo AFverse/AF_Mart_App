@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     
 @register(Category)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['name', 'desc', 'parent_category', 'created_at']
+    list_display = ['name', 'desc', 'parent_category', 'id', 'created_at']
     
 @register(Reviews)
 class UserAdmin(admin.ModelAdmin):

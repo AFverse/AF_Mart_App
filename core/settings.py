@@ -32,6 +32,7 @@ AUTH_USER_MODEL = "authentication.cUser"
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,15 +41,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
-    
-    
-    
+    'dbbackup',
     ]+[
     'authentication',
     'backend',
     'apiViews',
     'django_celery_results'
    ]
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
+
+CRONJOBS = [
+    ('*/1 * * * *', 'core.cron.db_backup')
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

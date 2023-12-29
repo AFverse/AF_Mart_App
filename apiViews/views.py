@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
-from rest_framework import views 
+from rest_framework import views
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
@@ -34,12 +34,27 @@ class categoriesViews(views.APIView):
             subCategories=pc.subCat.all()
             serializer = subCatSerializer(subCategories, many = True)
             return Response({'status':200, 'message':'These are producs sub categories according to parent category', 'payload': serializer.data})
-        
+
         if ctg_id is not None:
-            ctg=Category.objects.get(id=ctg_id)
+            ctg = Category.objects.get(id=ctg_id)
             products = ctg.products.all()
-            serializer = productSerializer(products, many = True)
-            return Response({'status':200, 'message':'These are products according to the category', 'payload': serializer.data})
+
+            # Get all unique brands related to the filtered products
+            brands = Brand.objects.filter(products__in=products).distinct()
+
+            # Serialize the brands
+            brand_serializer = brandSerializer(brands, many=True)
+
+            serializer = productSerializer(products, many=True)
+
+            return Response({
+                'status': 200,
+                'message': 'Products and related brands',
+                'payload': {
+                    'products': serializer.data,
+                    'brands': brand_serializer.data
+                }
+            })
 
         if brand_id is not None:
             products = Product.objects.filter(brand__id = brand_id)
@@ -59,7 +74,7 @@ class productViews(views.APIView):
         products = Product.objects.all()[:10]
         if topSell:
             products = Product.objects.filter(top_selling = True)
-            
+
         if recommended:
             products = Product.objects.filter(is_recommended = True)
     
@@ -110,8 +125,9 @@ class addToCartView(views.APIView):
             cartItemObj, created = CartItmes.objects.get_or_create(
                 user = user,
                 product = productObj,
-                quantity = quantity
             )
+            cartItemObj.quantity = quantity
+            cartItemObj.save()
             serializer = cartItemsSerializer(cartItemObj)
             return Response({ 'status': 201, 'message': 'Product add to cart successfully', 'payload': serializer.data })
         except Product.DoesNotExist:
@@ -162,7 +178,15 @@ class CheckOutView(views.APIView):
         address = request.data.get('address')
         city = request.data.get('city')
         total_price = request.data.get('total_price')
-        
+
+        order_id = request.data.get('order_id')
+        if order_id:
+            orderItemsObjs = OrderItems.objects.filter(order__id = order_id)
+            serializer = orderItemSerializer(orderItemsObjs, many=True)
+            return Response({'status': 200, "payload": serializer.data})
+
+
+
         User = get_user_model()
         user = User.objects.get(pk=request.user.pk)
         
