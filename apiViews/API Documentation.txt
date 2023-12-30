@@ -16,13 +16,17 @@ Get all subCategories related to a specific parent Category
 	body: {"id":"parentCategory ID"}
 
 
-Get all Products related to a specific subcategory Category 
+Get all Products related to a specific subcategory Category and their band info
 Note: all products are connected to subcategories 
 	
 	url: http://127.0.0.1:8000/api/getCategories
 	method : POST
 	body: {"ctg_id":"subCategory ID"}
 
+Get all products related to a specific Brand 
+	url: http://127.0.0.1:8000/api/getCategories
+	method : POST
+	body: {"brand_id":"Brand ID"}
 
 <-------------------Products API endpoints--------------------------->
 
@@ -82,11 +86,16 @@ Remove from cart
 
 <-------------------CheckOut API endpoints--------------------------->
 
-Get list of orders with their curresponding order items 
+Get list of orders for a specific user
 	
 	url :  http://127.0.0.1:8000/api/checkOut
 	method : GET
 
+Get list of order items for a spcific Order
+	
+	url :  http://127.0.0.1:8000/api/checkOut
+	method : POST
+	body: {"order_id":"Order Id"}
 Place order 
 	
 	url :  http://127.0.0.1:8000/api/checkOut

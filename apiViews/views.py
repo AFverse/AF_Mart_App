@@ -39,10 +39,9 @@ class categoriesViews(views.APIView):
             ctg = Category.objects.get(id=ctg_id)
             products = ctg.products.all()
 
-            # Get all unique brands related to the filtered products
+    
             brands = Brand.objects.filter(products__in=products).distinct()
-
-            # Serialize the brands
+            
             brand_serializer = brandSerializer(brands, many=True)
 
             serializer = productSerializer(products, many=True)
