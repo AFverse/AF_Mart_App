@@ -1,6 +1,8 @@
 from django.core.management import call_command
-def db_backup():
+def my_db_backup():
     try:
         call_command('dbbackup')
-    except:
-        pass
+    except Exception as e:
+        print(e)
+
+

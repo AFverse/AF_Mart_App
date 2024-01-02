@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     'dbbackup',
+    "django_apscheduler",
     ]+[
     'authentication',
     'backend',
@@ -53,7 +54,7 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
 
 CRONJOBS = [
-    ('*/1 * * * *', 'core.cron.db_backup')
+    ('*/1 * * * *', 'core.cron.my_db_backup')
 ]
 
 MIDDLEWARE = [
